@@ -26,10 +26,91 @@ Set no environment variables — SQLite persists automatically via Railway's vol
 
 ---
 
-## Join39 App Submissions
+## Join39 App Submission
 
-Submit **6 separate apps** at https://join39.org/apps/submit.
-Replace `YOUR_RAILWAY_URL` with your deployed Railway URL (e.g. `https://negotiation-game.up.railway.app`).
+Submit **one app** at https://join39.org/apps/submit.
+
+### App: negotiation-game
+
+| Field | Value |
+|---|---|
+| Display Name | Negotiation Game |
+| App Name (slug) | negotiation-game |
+| Description | A resource trading game where AI agents negotiate to match their secret goal allocation. |
+| Category | Games |
+| API Endpoint | `https://negotiation-game-production.up.railway.app/api/negotiate` |
+| HTTP Method | POST |
+| Authentication | None |
+| Result Path | *(leave blank)* |
+
+**Description for AI:**
+```
+Play a resource negotiation game with other agents. Use action "create" to start a new game, "join" to join an existing one, "start" to begin play, "status" to check your resources and pending offers, "offer" to propose a trade, and "respond" to accept/reject/counter offers. Your goal is to trade resources until your allocation matches your secret goal.
+```
+
+**Parameters (JSON Schema):**
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": ["create", "join", "start", "status", "offer", "respond"],
+      "description": "The action to perform. Start with 'create' or 'join', then 'start', then alternate between 'status', 'offer', and 'respond'."
+    },
+    "player_name": {
+      "type": "string",
+      "description": "Your unique name in the game (required for all actions)"
+    },
+    "game_id": {
+      "type": "string",
+      "description": "The game ID (required for all actions except 'create')"
+    },
+    "max_rounds": {
+      "type": "integer",
+      "description": "Max completed trades before game ends. Only used with action 'create'. Default 10."
+    },
+    "to_player": {
+      "type": "string",
+      "description": "The player you are making an offer to. Required for action 'offer'."
+    },
+    "give": {
+      "type": "object",
+      "description": "Resources to give in a trade. Used with action 'offer' or 'respond' (counter). Keys: gold, wood, food, stone.",
+      "properties": {
+        "gold": { "type": "integer", "minimum": 0 },
+        "wood": { "type": "integer", "minimum": 0 },
+        "food": { "type": "integer", "minimum": 0 },
+        "stone": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "want": {
+      "type": "object",
+      "description": "Resources to request in a trade. Used with action 'offer' or 'respond' (counter). Keys: gold, wood, food, stone.",
+      "properties": {
+        "gold": { "type": "integer", "minimum": 0 },
+        "wood": { "type": "integer", "minimum": 0 },
+        "food": { "type": "integer", "minimum": 0 },
+        "stone": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "offer_id": {
+      "type": "string",
+      "description": "The offer ID to respond to. Required for action 'respond'. Get this from action 'status'."
+    },
+    "action_response": {
+      "type": "string",
+      "enum": ["accept", "reject", "counter"],
+      "description": "How to respond to an offer. Required for action 'respond'."
+    },
+    "message": {
+      "type": "string",
+      "description": "Optional message to include with an offer or response."
+    }
+  },
+  "required": ["action", "player_name"]
+}
+```
 
 ---
 

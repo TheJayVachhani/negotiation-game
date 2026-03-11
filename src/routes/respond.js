@@ -6,13 +6,14 @@ const { RESOURCES } = require('../game');
 const router = express.Router();
 
 router.post('/', (req, res) => {
-  const { game_id, player_name, offer_id, action, give, want, message } = req.body;
+  const { game_id, player_name, offer_id, action_response, give, want, message } = req.body;
+  const action = action_response; // renamed to avoid conflict with unified 'action' routing field
 
   if (!game_id || !player_name || !offer_id || !action) {
-    return res.status(400).json({ success: false, error: 'game_id, player_name, offer_id, and action are required' });
+    return res.status(400).json({ success: false, error: 'game_id, player_name, offer_id, and action_response are required' });
   }
   if (!['accept', 'reject', 'counter'].includes(action)) {
-    return res.status(400).json({ success: false, error: 'action must be "accept", "reject", or "counter"' });
+    return res.status(400).json({ success: false, error: 'action_response must be "accept", "reject", or "counter"' });
   }
 
   const name = player_name.trim();

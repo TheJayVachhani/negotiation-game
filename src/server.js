@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
   });
 });
 
+app.use('/api/negotiate', require('./routes/negotiate'));
 app.use('/api/create', require('./routes/create'));
 app.use('/api/join', require('./routes/join'));
 app.use('/api/start', require('./routes/start'));
